@@ -29,12 +29,12 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="flixel=3.3.8&#xA;openfl=3.1.0&#xA;lime=2.4.4&#xA;munit=2.1.0&#xA;hamcrest=2.0.0&#xA;mcover=2.1.1&#xA;mconsole=1.6.0&#xA;mlib=2.0.2&#xA;openfl-next&#xA;tools=2.4.4&#xA;no-compilation&#xA;openfl-flash&#xA;FLX_RENDER_BLIT&#xA;web" />
+    <option directives="flixel=3.3.8&#xA;openfl=3.1.0&#xA;lime=2.4.4&#xA;munit=2.1.0&#xA;hamcrest=2.0.0&#xA;mcover=2.1.1&#xA;mconsole=1.6.0&#xA;mlib=2.0.2&#xA;openfl-next&#xA;tools=2.4.4&#xA;FLX_NO_DEBUG&#xA;no-compilation&#xA;NAPE_RELEASE_BUILD&#xA;openfl-flash&#xA;FLX_RENDER_BLIT&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="-swf-version 11.8&#xA;-debug " />
+    <option additional="-swf-version 11.8" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

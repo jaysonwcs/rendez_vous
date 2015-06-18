@@ -1,0 +1,14 @@
+## Flash 9+
+-main TestMain
+
+-lib flixel
+
+-lib munit
+-lib hamcrest
+-cp source
+
+-cp test
+-swf-version 11.8
+-swf export/as3_test.swf
+
+-D FLX_RENDER_BLIT

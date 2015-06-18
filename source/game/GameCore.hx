@@ -93,4 +93,19 @@ class GameCore extends FlxState
 		//hudFormatter.trailingZeros = true;
 	}
 	
+	//TODO: override public function create():void
+	//TODO: override public function create():void
+	//TODO: protected function setupLevel():void
+	//TODO: private function setupCamera():void
+	//TODO: override public function update():void
+	//TODO: private function playerLevelColision(obj1: FlxObject, obj2: FlxObject):void
+	//TODO: public function pause():void
+	//TODO: public function unpause():void
+	//TODO: public function updateDebugMode():void
+	//TODO: public function get isPaused():Boolean
+	//TODO: public function resetHud():void
+	//TODO: public function blinkRed(redBlinkingSpeed:Number):void
+	//TODO: public function resetBlinkRed():void
+	//TODO: public function set life(value:Number):void
+	
 }
