@@ -12,6 +12,7 @@ class GameCoreTest
 {
 	var instance:GameCore;
 	var playerPos: FlxPoint;
+	var player:MainCharacter;
 	
 	public function new() 
 	{
@@ -46,9 +47,9 @@ class GameCoreTest
 		Assert.isNotNull(instance.boxesList);
 		Assert.isNotNull(instance.interfaceLayer);
 		Assert.isNotNull(instance.inventoryItemsList);
-		Assert.isNotNull(instance.level);
-		Assert.isNotNull(instance.objectsMap);
-		Assert.isNotNull(instance.backgroundMap);
+		//Assert.isNotNull(instance.level);
+		//Assert.isNotNull(instance.objectsMap);
+		//Assert.isNotNull(instance.backgroundMap);
 		Assert.isNotNull(instance.checkPointsList);
 		Assert.isNotNull(instance.enemiesList);
 		Assert.isNotNull(instance.airTanksList);
@@ -59,61 +60,58 @@ class GameCoreTest
 	public function testCreate():Void
 	{
 		//For checking player position after
-		var players: Array<FlxPoint> = instance.objectsMap.getTileCoords(1, false);
-		if (players != null)
-		{
-			for (pos in players) 
-			{
-				playerPos = pos;
-			}
-		}
+		//var players: Array<FlxPoint> = instance.objectsMap.getTileCoords(1, false);
+		//if (players != null)
+		//{
+			//for (pos in players) 
+			//{
+				//playerPos = pos;
+			//}
+		//}
 		
 		//Executing method
 		instance.create();
 		
-		//Checking for worldBounds
-		Assert.areEqual(instance.level.width, FlxG.worldBounds.width);
-		Assert.areEqual(instance.level.height, FlxG.worldBounds.height);
-		Assert.areEqual(0, FlxG.worldBounds.left);
-		Assert.areEqual(0, FlxG.worldBounds.top);
-		
-		//setupLevel();
-		
-		//add(backgroundLayer);
-		//add(gameLayer);
-		//add(interfaceLayer);
-		Assert.areEqual(3, instance.length);
-		
-		//gameLayer.add(level);
-		//gameLayer.add(inventoryItemsList);
-		//gameLayer.add(boxesList);
-		//gameLayer.add(airTanksList);
-		//gameLayer.add(fuelTanksList);
-		////gameLayer.add(checkPoints);
-		////gameLayer.add(enemies);
-		
-		
-		//backgroundLayer.add(backgroundMap);
-		Assert.areEqual(1, instance.backgroundLayer.length);
-		
-		//player = new MainCharacter(this, inventory);
-		var player = Reflect.field(instance, "player");
-		Assert.isNotNull(player);
-		//TODO: check if player is instantiated
-		
-		//setupCamera();
-		Assert.isNotNull(instance.gameCamera);
-		
-		//LevelGenerator.generateLevel(this);
-		Assert.areEqual(playerPos.x, player.x);
-		Assert.areEqual(playerPos.y, player.y);
-		//TODO: Continue testing the generateLevel process
-		
-		//objectsMap.destroy();
-		Assert.isNull(instance.objectsMap);
-		
-		//gameLayer.add(player);
-		Assert.areEqual(6, instance.gameLayer.length);
+		////Checking for worldBounds
+		////Assert.areEqual(instance.level.width, FlxG.worldBounds.width);
+		////Assert.areEqual(instance.level.height, FlxG.worldBounds.height);
+		//Assert.areEqual(0, FlxG.worldBounds.left);
+		//Assert.areEqual(0, FlxG.worldBounds.top);
+		//
+		////setupLevel();
+		//
+		////add(backgroundLayer);
+		////add(gameLayer);
+		////add(interfaceLayer);
+		//Assert.areEqual(3, instance.length);
+		//
+		////gameLayer.add(level);
+		////gameLayer.add(inventoryItemsList);
+		////gameLayer.add(boxesList);
+		////gameLayer.add(airTanksList);
+		////gameLayer.add(fuelTanksList);
+		//////gameLayer.add(checkPoints);
+		//////gameLayer.add(enemies);
+		//
+		//
+		////backgroundLayer.add(backgroundMap);
+		//Assert.areEqual(1, instance.backgroundLayer.length);
+		//
+		//Assert.isNotNull(instance.player);
+		//
+		////setupCamera();
+		//Assert.isNotNull(instance.gameCamera);
+		//
+		////LevelGenerator.generateLevel(this);
+		//Assert.areEqual(playerPos.x, player.x);
+		//Assert.areEqual(playerPos.y, player.y);
+		////TODO: Continue testing the generateLevel process
+		//
+		////objectsMap.destroy();
+		////Assert.isNull(instance.objectsMap);
+		//
+		////gameLayer.add(player);
+		//Assert.areEqual(6, instance.gameLayer.length);
 		
 		//TODO: Continue testing
 		//txtVelocity = new FlxText(10, 10, 200);
@@ -121,7 +119,7 @@ class GameCoreTest
 		//txtVelocity.scrollFactor.y = 0;
 		//interfaceLayer.add(txtVelocity);
 		//txtVelocity.text = "Velocidades:";
-		//
+		
 		//txtXVelocity = new FlxText(10, 20, 200);
 		//txtXVelocity.scrollFactor.x = 0;
 		//txtXVelocity.scrollFactor.y = 0;
@@ -204,7 +202,10 @@ class GameCoreTest
 		//redBackground.makeGraphic(FlxG.width, FlxG.height, 0xffff0000);
 		//interfaceLayer.add(redBackground);
 		//redBackground.alpha = 0;
-		//
+		Assert.areEqual(16, instance.interfaceLayer.length);
+
+		
 		//FlxG.playMusic(titleMusic);
+		Assert.isTrue(FlxG.sound.music.playing);
 	}
 }

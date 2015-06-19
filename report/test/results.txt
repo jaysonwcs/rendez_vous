@@ -1,1 +1,0 @@
-Tests FAILED under as3 using summary client
