@@ -1,6 +1,10 @@
 package game.levels;
 
+import flixel.FlxSprite;
+import flixel.system.FlxAssets;
+import flixel.tile.FlxTilemap;
 import game.GameCore;
+import lime.Assets;
 
 /**
  * ...
@@ -8,31 +12,21 @@ import game.GameCore;
  */
 class Level1 extends GameCore
 {
-
-	//[Embed(source = '../../../assets/levels/mapCSV_Group1_map.csv', mimeType = 'application/octet-stream')] public static var level1Csv:Class;
-	//[Embed(source = '../../../assets/levels/mapCSV_Group1_obj.csv', mimeType = 'application/octet-stream')] public static var obj1Csv:Class;
-	//[Embed(source = '../../../assets/levels/mapCSV_Group1_back.csv', mimeType = 'application/octet-stream')] public static var back1Csv:Class;
-	//[Embed(source = '../../../assets/tilesets/tileset.png')] public static var tilesetImg:Class;
-	//[Embed(source = '../../../assets/tilesets/tileset_back.png')] public static var tilesetBackImg:Class;
-	//[Embed(source = '../../../assets/backgrounds/sunshine.png')] public static var backgroundImg:Class;
-		
-	//private const SCROOLFACTOR_BACK: Number = 0.04;
-	private static inline var SCROOLFACTOR_BACK: Float = 0;
+	private static inline var SCROOLFACTOR_BACK: Float = 0.04;
 	
 	public function new() 
 	{
 		super();
 		
-		//var backgroundSprite: FlxSprite = new FlxSprite(0, 0, backgroundImg);
-		//backgroundLayer.add(backgroundSprite);
-		//backgroundSprite.scrollFactor.x = SCROOLFACTOR_BACK;
-		//backgroundSprite.scrollFactor.y = SCROOLFACTOR_BACK;
-		//
-		//backgroundMap.loadMap(new back1Csv(), tilesetBackImg, 40, 40);
-		//level.loadMap(new level1Csv(), tilesetImg, 40, 40, FlxTilemap.OFF, 0, 1, 1);
-		//objectsMap.loadMap(new obj1Csv(), tilesetImg, 40, 40, FlxTilemap.OFF, 0, 1, 1);
-		////backgroundMap.loadMap(new Assets.level7BackCsv, Assets.tilesetBackImg, 20, 20, FlxTilemap.OFF, 0, 1, 1);
-		//
+		var backgroundSprite: FlxSprite = new FlxSprite(0, 0, AssetPaths.sunshine__png);
+		backgroundLayer.add(backgroundSprite);
+		backgroundSprite.scrollFactor.x = SCROOLFACTOR_BACK;
+		backgroundSprite.scrollFactor.y = SCROOLFACTOR_BACK;
+		
+		backgroundMap.loadMap(Assets.getText(AssetPaths.mapCSV_Group1_back__csv), AssetPaths.tileset_back__png, 40, 40);
+		level.loadMap(Assets.getText(AssetPaths.mapCSV_Group1_map__csv), AssetPaths.tileset__png, 40, 40, FlxTilemap.OFF, 0, 1, 1);
+		objectsMap.loadMap(Assets.getText(AssetPaths.mapCSV_Group1_obj__csv), AssetPaths.tileset__png, 40, 40, FlxTilemap.OFF, 0, 1, 1);
+		
 		//var tool: Tool = new Tool(200, 200);
 		//inventoryItemsList.add(tool);
 		//

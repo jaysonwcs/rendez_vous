@@ -11,6 +11,7 @@ import flixel.util.FlxRect;
 import game.gui.HudBar;
 import game.gui.Radar;
 import game.inventory.Inventory;
+import game.levels.LevelGenerator;
 
 /**
  * ...
@@ -79,9 +80,9 @@ class GameCore extends FlxState
 		boxesList = new FlxGroup();
 		interfaceLayer = new FlxGroup();
 		inventoryItemsList = new FlxGroup();
-		//level = new FlxTilemap();
-		//objectsMap = new FlxTilemap();
-		//backgroundMap = new FlxTilemap();
+		level = new FlxTilemap();
+		objectsMap = new FlxTilemap();
+		backgroundMap = new FlxTilemap();
 		checkPointsList = new FlxGroup();
 		enemiesList = new FlxGroup();
 		inventory = new Inventory();
@@ -100,8 +101,9 @@ class GameCore extends FlxState
 	
 	override public function create():Void
 	{
-		FlxG.worldBounds.set(0, 0, 1000, 1000);
-		//FlxG.worldBounds.set(0, 0, level.width, level.height);
+		super.create();
+		
+		FlxG.worldBounds.set(0, 0, level.width, level.height);
 			
 		//setupLevel();
 		
@@ -109,7 +111,7 @@ class GameCore extends FlxState
 		add(gameLayer);
 		add(interfaceLayer);
 		
-		//gameLayer.add(level);
+		gameLayer.add(level);
 		gameLayer.add(inventoryItemsList);
 		gameLayer.add(boxesList);
 		gameLayer.add(airTanksList);
@@ -117,13 +119,13 @@ class GameCore extends FlxState
 		//gameLayer.add(checkPoints);
 		//gameLayer.add(enemies);
 		
-		//backgroundLayer.add(backgroundMap);
+		backgroundLayer.add(backgroundMap);
 		
 		player = new MainCharacter(this, inventory);
 		
-		//setupCamera();
+		setupCamera();
 		
-		//LevelGenerator.generateLevel(this);
+		LevelGenerator.generateLevel(this);
 		//objectsMap.destroy();
 		
 		gameLayer.add(player);
@@ -217,7 +219,7 @@ class GameCore extends FlxState
 		//interfaceLayer.add(redBackground);
 		//redBackground.alpha = 0;
 		
-		////FlxG.sound.playMusic(titleMusic);
+		FlxG.sound.playMusic(AssetPaths.SpaceAtmosphere2__mp3);
 	}
 	
 	
@@ -227,8 +229,7 @@ class GameCore extends FlxState
 		gameCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 1);
 		
 		gameCamera.follow(player, FlxCamera.STYLE_PLATFORMER);
-		//gameCamera.setBounds(0, 0, level.width, level.height);
-		gameCamera.setBounds(0, 0, 1000, 1000);
+		gameCamera.setBounds(0, 0, level.width, level.height);
 		FlxG.cameras.add(gameCamera);
 	}
 	

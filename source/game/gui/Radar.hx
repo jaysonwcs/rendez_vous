@@ -31,6 +31,8 @@ class Radar extends FlxSprite
 	{
 		super(X, Y);
 		
+		makeGraphic(20, 20);
+		
 		//this.gameCore = gameCore;
 		//
 		//_bussola = new FlxSprite();
