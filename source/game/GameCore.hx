@@ -1,5 +1,6 @@
 package game;
 
+import flixel.addons.editors.tiled.TiledLayer;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -7,6 +8,7 @@ import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
+import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import game.gui.HudBar;
 import game.gui.Radar;
@@ -75,14 +77,42 @@ class GameCore extends FlxState
 	{
 		super();
 		
+		//backgroundLayer = new FlxGroup();
+		//gameLayer = new FlxGroup();
+		//boxesList = new FlxGroup();
+		//interfaceLayer = new FlxGroup();
+		//inventoryItemsList = new FlxGroup();
+		//level = new FlxTilemap();
+		////objectsMap = new FlxTilemap();
+		////backgroundMap = new FlxTilemap();
+		//checkPointsList = new FlxGroup();
+		//enemiesList = new FlxGroup();
+		//inventory = new Inventory();
+		//airTanksList = new FlxGroup();
+		//fuelTanksList = new FlxGroup();
+		//
+		//redBackground = new FlxSprite();
+		//redBackground.scrollFactor.x = 0;
+		//redBackground.scrollFactor.y = 0;
+		//
+		////hudFormatter = new NumberFormatter(LocaleID.DEFAULT);
+		////hudFormatter.fractionalDigits = 3;
+		////hudFormatter.leadingZero = true;
+		////hudFormatter.trailingZeros = true;
+	}
+	
+	override public function create():Void
+	{
+		super.create();
+		
 		backgroundLayer = new FlxGroup();
 		gameLayer = new FlxGroup();
 		boxesList = new FlxGroup();
 		interfaceLayer = new FlxGroup();
 		inventoryItemsList = new FlxGroup();
 		level = new FlxTilemap();
-		objectsMap = new FlxTilemap();
-		backgroundMap = new FlxTilemap();
+		//objectsMap = new FlxTilemap();
+		//backgroundMap = new FlxTilemap();
 		checkPointsList = new FlxGroup();
 		enemiesList = new FlxGroup();
 		inventory = new Inventory();
@@ -97,15 +127,10 @@ class GameCore extends FlxState
 		//hudFormatter.fractionalDigits = 3;
 		//hudFormatter.leadingZero = true;
 		//hudFormatter.trailingZeros = true;
-	}
-	
-	override public function create():Void
-	{
-		super.create();
+		
+		setupLevel();
 		
 		FlxG.worldBounds.set(0, 0, level.width, level.height);
-			
-		//setupLevel();
 		
 		add(backgroundLayer);
 		add(gameLayer);
@@ -119,7 +144,7 @@ class GameCore extends FlxState
 		//gameLayer.add(checkPoints);
 		//gameLayer.add(enemies);
 		
-		backgroundLayer.add(backgroundMap);
+		//backgroundLayer.add(backgroundMap);
 		
 		player = new MainCharacter(this, inventory);
 		
@@ -220,15 +245,26 @@ class GameCore extends FlxState
 		//redBackground.alpha = 0;
 		
 		FlxG.sound.playMusic(AssetPaths.SpaceAtmosphere2__mp3);
+		
+		FlxG.watch.add(FlxG.worldBounds, "x");
+		FlxG.watch.add(FlxG.worldBounds, "y");
+		FlxG.watch.add(FlxG.worldBounds, "bottom");
+		FlxG.watch.add(FlxG.worldBounds, "right");
+		//FlxG.watch.add(level, "width");
+		//FlxG.watch.add(level, "height");
+		FlxG.watch.add(player, "x");
+		FlxG.watch.add(player, "y");
 	}
 	
 	
-	//TODO: protected function setupLevel():void
+	private function setupLevel():Void {
+		
+	}
 	
 	private function setupCamera():Void {
 		gameCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 1);
 		
-		gameCamera.follow(player, FlxCamera.STYLE_PLATFORMER);
+		gameCamera.follow(player, FlxCamera.STYLE_PLATFORMER, new FlxPoint(0, 0));
 		gameCamera.setBounds(0, 0, level.width, level.height);
 		FlxG.cameras.add(gameCamera);
 	}

@@ -1,7 +1,14 @@
 package game;
 
+import flixel.addons.editors.tiled.TiledLayer;
+import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.input.keyboard.FlxKeyList;
 import game.inventory.Inventory;
+import flixel.util.FlxPoint;
+import flixel.effects.particles.FlxEmitter;
+import flixel.effects.particles.FlxParticle;
 
 /**
  * ...
@@ -12,62 +19,70 @@ class MainCharacter extends FlxSprite
 
 	//[Embed(source = '../../assets/spritesheets/astronauta.png')] public static var playerImg:Class;
 	//[Embed(source = '../../assets/sfx/hurt.mp3')] public static var hurtSfx:Class;
-	//
-	////public var controller: ICharacterController;
-	//public var life: Number;
-	//private var dying: Boolean;
-	//private var gameCore: GameCore;
-	//private var counter: Number;
-	//
-	//public var lastVelocity: FlxPoint;
-	//
-	//private var leftBtnPressed: Boolean;
-	//private var rightBtnPressed: Boolean;
-	//private var upBtnPressed: Boolean;
-	//private var downBtnPressed: Boolean;
-	//
-	//private var deathBlank: FlxSprite;
-	//
-	////Our emmiter
-	//private var theEmitter:FlxEmitter;
-//
-	////Our white pixel (This is to prevent creating 200 new pixels all to a new variable each loop)
-	//private var whitePixel:FlxParticle;
-	//
-	//private var inventory: Inventory;
-	//
-	//public var fuel: Number;
-	//public var airTime: Number;
-	//public const AIRTIME: Number = 300;
+	
+	//public var controller: ICharacterController;
+	public var life: Float;
+	private var dying: Bool;
+	private var gameCore: GameCore;
+	private var counter: Float;
+	
+	public var lastVelocity: FlxPoint;
+	
+	private var leftBtnPressed: Bool;
+	private var rightBtnPressed: Bool;
+	private var upBtnPressed: Bool;
+	private var downBtnPressed: Bool;
+	
+	private var deathBlank: FlxSprite;
+	
+	//Our emmiter
+	private var theEmitter:FlxEmitter;
+
+	//Our white pixel (This is to prevent creating 200 new pixels all to a new variable each loop)
+	private var whitePixel:FlxParticle;
+	
+	private var inventory: Inventory;
+	
+	public var fuel: Float;
+	public var airTime: Float;
+	public static inline var AIRTIME: Float = 300;
 	public static inline var FUEL: Float = 15;
-	//public var lastBreath: Number;
-	//public const LASTBREATH: Number = 10;
-	//
-	//public var impulse: Boolean;
-	//
-	//private var currentlyTile: FlxPoint;
-	//private var posToCalcTile: FlxPoint;
-	//
-	//private var upRightTile: Number;
-	//private var upUpRightTile: Number;
-	//private var upLeftTile: Number;
-	//private var upUpLeftTile: Number;
-	//private var upTile: Number;
-	//private var downRightTile: Number;
-	//private var downLeftTile: Number;
-	//private var downTile: Number;
-	//private var leftTile: Number;
-	//private var rightTile: Number;
-	//
-	//private var currentlyTileNum: Number;
-	//
-	//private var turning: Boolean;
-	//private var fillingAirTank:Boolean;
-	//private var oldVelocity:FlxPoint;
-	//private var fillingFuelTank:Boolean;
-	//private var fillingTank: Boolean;
-	//
-	//private var _suitDamage: Number;
+	public var lastBreath: Float;
+	public static inline var LASTBREATH: Float = 10;
+	
+	public var impulse: Bool;
+	
+	private var currentlyTile: FlxPoint;
+	
+	private var currentTileX: Int;
+	private var currentTileY: Int;
+	
+	private var posToCalcTile: FlxPoint;
+	
+	private var upRightTile: Float;
+	private var upUpRightTile: Float;
+	private var upLeftTile: Float;
+	private var upUpLeftTile: Float;
+	private var upTile: Float;
+	private var downRightTile: Float;
+	private var downLeftTile: Float;
+	private var downTile: Float;
+	private var leftTile: Float;
+	private var rightTile: Float;
+	
+	private var currentlyTileNum: Float;
+	
+	private var turning: Bool;
+	private var fillingAirTank:Bool;
+	private var oldVelocity:FlxPoint;
+	private var fillingFuelTank:Bool;
+	private var fillingTank: Bool;
+	
+	private var suitDamage: Float;
+	
+	private var keysJustPressed: FlxKeyList;
+	private var keysPressed: FlxKeyList;
+	private var keysJustReleased: FlxKeyList;
 	
 	public function new(gameCore: GameCore, inventory: Inventory, fuel: Float = FUEL) 
 	{
@@ -78,198 +93,208 @@ class MainCharacter extends FlxSprite
 		y = 0;
 		makeGraphic(20, 20);
 		
-		//loadGraphic(playerImg, true, true, 39, 61);
-			//
-		//drag.x = 0;
-		//drag.y = 0;
-		//maxVelocity.x = 1000000000;
-		//maxVelocity.y = 1000000000;
-		//life = 3;
-		//airTime = AIRTIME;
-		//this.fuel = fuel;
-		//lastBreath = LASTBREATH;
-		//counter = 1;
-		//
-		//this.inventory = inventory;
-		//
-		//theEmitter = new FlxEmitter(this.x + 20, this.y + 30, 50);
-		//theEmitter.lifespan = 0.5;
-		////Now by default the emitter is going to have some properties set on it and can be used immediately
-		////but we're going to change a few things.
-//
-		////Let's also make our pixels rebound off surfaces
-		////theEmitter.bounce = .8;
-//
-		////Now let's add the emitter to the state.
-		//gameCore.gameLayer.add(theEmitter);
-		//
-		////Now it's almost ready to use, but first we need to give it some pixels to spit out!
-		////Lets fill the emitter with some white pixels
-		//for (var i:int = 0; i < theEmitter.maxSize/2; i++) {
-			//whitePixel = new FlxParticle();
-			//whitePixel.makeGraphic(2, 2, 0xFFFFFFFF);
-			//whitePixel.visible = false; //Make sure the particle doesn't show up at (0, 0)
-			//theEmitter.add(whitePixel);
-			//whitePixel = new FlxParticle();
-			//whitePixel.makeGraphic(1, 1, 0xFFFFFFFF);
-			//whitePixel.visible = false;
-			//theEmitter.add(whitePixel);
-		//}
-		//
-		////width = 20;
-		////height = 35;
-		////offset.x = 15;
-		////offset.y = 12;
-		//
-		//lastVelocity = new FlxPoint();
-		//
-		//posToCalcTile = new FlxPoint();
-		//currentlyTile = new FlxPoint();
-		//oldVelocity = new FlxPoint();
-		//
-		//suitDamage = 0;
-		//
-		//this.gameCore = gameCore;
+		loadGraphic(AssetPaths.astronauta__png, true, 39, 61);
+		
+		drag.x = 0;
+		drag.y = 0;
+		maxVelocity.x = 1000000000;
+		maxVelocity.y = 1000000000;
+		life = 3;
+		airTime = AIRTIME;
+		this.fuel = fuel;
+		lastBreath = LASTBREATH;
+		counter = 1;
+		
+		this.inventory = inventory;
+		
+		theEmitter = new FlxEmitter(this.x + 20, this.y + 30, 50);
+		theEmitter.lifespan = 0.5;
+		//Now by default the emitter is going to have some properties set on it and can be used immediately
+		//but we're going to change a few things.
+
+		//Let's also make our pixels rebound off surfaces
+		//theEmitter.bounce = .8;
+
+		//Now let's add the emitter to the state.
+		gameCore.gameLayer.add(theEmitter);
+		
+		//Now it's almost ready to use, but first we need to give it some pixels to spit out!
+		//Lets fill the emitter with some white pixels
+		var i: Float = 0;
+		while (i < theEmitter.maxSize / 2)
+		{
+			whitePixel = new FlxParticle();
+			whitePixel.makeGraphic(2, 2, 0xFFFFFFFF);
+			whitePixel.visible = false; //Make sure the particle doesn't show up at (0, 0)
+			theEmitter.add(whitePixel);
+			whitePixel = new FlxParticle();
+			whitePixel.makeGraphic(1, 1, 0xFFFFFFFF);
+			whitePixel.visible = false;
+			theEmitter.add(whitePixel);
+			i += 1;
+		}
+		
+		//width = 20;
+		//height = 35;
+		//offset.x = 15;
+		//offset.y = 12;
+		
+		lastVelocity = new FlxPoint();
+		
+		posToCalcTile = new FlxPoint();
+		currentlyTile = new FlxPoint();
+		oldVelocity = new FlxPoint();
+		
+		suitDamage = 0;
+		
+		this.gameCore = gameCore;
 	}
 	
-	//override public function update():void {
-		//super.update();
-		//
-		//if (airTime >= 0)
-			//if (suitDamage >= 100)
-				//airTime -= FlxG.elapsed * 5;
-			//else
-				//airTime -= FlxG.elapsed;
-		//else {
-			//lastBreath -= FlxG.elapsed;
-			//
+	override public function update():Void {
+		super.update();
+		
+		if (airTime >= 0)
+			if (suitDamage >= 100)
+				airTime -= FlxG.elapsed * 5;
+			else
+				airTime -= FlxG.elapsed;
+		else {
+			lastBreath -= FlxG.elapsed;
+			
 			//if (lastBreath > 5)
 				//gameCore.blinkRed(0.05);
 			//else if (lastBreath > 2)
 				//gameCore.blinkRed(0.1);
 			//else
 				//gameCore.blinkRed(0.2);
-		//}
-		//
-		//if (lastBreath <= 0)
-			//kill();
-		//
-		//if (!isTouching(ANY))
-			//dying = false;
-			//
-		//lastVelocity.x = velocity.x;
-		//lastVelocity.y = velocity.y;
-		//
-		//if (FlxG.keys.justPressed("SPACE")) {
-			//FlxG.overlap(this, gameCore.inventoryItemsList, function (obj1: FlxObject, obj2: FlxObject):void 
-			//{
-				//gameCore.gameLayer.remove(obj2);
-				//inventory.add(obj2);
-			//});
-		//}
-		//
-		//if (FlxG.keys.SPACE) {
+		}
+		
+		if (lastBreath <= 0)
+			kill();
+		
+		if (!isTouching(FlxObject.ANY))
+			dying = false;
+			
+		lastVelocity.x = velocity.x;
+		lastVelocity.y = velocity.y;
+		
+		keysJustPressed = FlxG.keys.justPressed;
+		keysPressed = FlxG.keys.pressed;
+		keysJustReleased = FlxG.keys.justReleased;
+		
+		if (keysJustPressed.SPACE) {
+			FlxG.overlap(this, gameCore.inventoryItemsList, function (obj1: FlxObject, obj2: FlxObject):Void 
+			{
+				gameCore.gameLayer.remove(obj2);
+				inventory.add(obj2);
+			});
+		}
+		
+		//if (keysPressed.SPACE) {
 			//FlxG.overlap(this, gameCore.airTanksList, fillAirTank);
 			//FlxG.overlap(this, gameCore.fuelTanksList, fillFuelTank);
 		//}
-		//
-		//if (FlxG.keys.justReleased("SPACE") || fillingTank && ((airTime >= AIRTIME) ||
-			//(fillingFuelTank && fuel >= FUEL))) {
-			//if (airTime >= AIRTIME)
-				//airTime = AIRTIME;
-				//
-			//if (fuel >= FUEL)
-				//fuel = FUEL;
-			//
-			//fillingTank = false;
-			//velocity = oldVelocity;
-		//}
-		//
-		//posToCalcTile.x = x + width/2;
-		//posToCalcTile.y = y + height/2;
-		//
-		//currentlyTile.x = Math.floor(posToCalcTile.x / Constants.TILE_SIZE);
-		//currentlyTile.y = Math.floor(posToCalcTile.y / Constants.TILE_SIZE);
-		//
-		//currentlyTileNum = gameCore.level.getTile(currentlyTile.x, currentlyTile.y);
-		//upRightTile = gameCore.level.getTile(currentlyTile.x + 1, currentlyTile.y - 1);
-		//upUpRightTile = gameCore.level.getTile(currentlyTile.x + 1, currentlyTile.y - 2);
-		//upLeftTile = gameCore.level.getTile(currentlyTile.x - 1, currentlyTile.y - 1);
-		//upUpLeftTile = gameCore.level.getTile(currentlyTile.x - 1, currentlyTile.y - 2);
-		//upTile = gameCore.level.getTile(currentlyTile.x, currentlyTile.y - 1);
-		//downRightTile = gameCore.level.getTile(currentlyTile.x + 1, currentlyTile.y + 1);
-		//downLeftTile = gameCore.level.getTile(currentlyTile.x - 1, currentlyTile.y + 1);
-		//downTile = gameCore.level.getTile(currentlyTile.x, currentlyTile.y + 1);
-		//rightTile = gameCore.level.getTile(currentlyTile.x + 1, currentlyTile.y);
-		//leftTile = gameCore.level.getTile(currentlyTile.x - 1, currentlyTile.y);
-		//
-		//if (!fillingTank) {
-			//if((FlxG.keys.A || FlxG.keys.LEFT) && fuel > 0 && !impulse && acceleration.x == 0 && acceleration.y == 0) {
-				//fuel -= FlxG.elapsed;
-				//
-				//theEmitter.x = this.x + 20 + (velocity.x / 30);
-				//theEmitter.y = this.y + 30 + (velocity.y / 30);
-				//
-				//facing = FlxObject.LEFT;
-				//velocity.x -= 10;
-				//leftBtnPressed = true;
-				//theEmitter.setXSpeed(100 + this.velocity.x, 250 + this.velocity.x);
-				//theEmitter.setYSpeed(-25 + this.velocity.y, 25 + this.velocity.y);
-				//theEmitter.emitParticle();
-				//theEmitter.emitParticle();
-				//theEmitter.emitParticle();
-			//}
-			//if((FlxG.keys.D || FlxG.keys.RIGHT) && fuel > 0 && !impulse && acceleration.x == 0 && acceleration.y == 0) {
-				//fuel -= FlxG.elapsed;
-				//
-				//theEmitter.x = this.x + 20 + (velocity.x / 30);
-				//theEmitter.y = this.y + 30 + (velocity.y / 30);
-				//
-				//facing = FlxObject.RIGHT;
-				//velocity.x += 10;
-				//rightBtnPressed = true;
-				//theEmitter.setXSpeed(-100 + this.velocity.x, -250 + this.velocity.x);
-				//theEmitter.setYSpeed(-25 + this.velocity.y, 25 + this.velocity.y);
-				//theEmitter.emitParticle();
-				//theEmitter.emitParticle();
-				//theEmitter.emitParticle();
-			//}
-			//if ((FlxG.keys.W || FlxG.keys.UP) && fuel > 0 && !impulse && acceleration.x == 0 && acceleration.y == 0) {
-				//fuel -= FlxG.elapsed;
-				//
-				//theEmitter.x = this.x + 20 + (velocity.x / 30);
-				//theEmitter.y = this.y + 30 + (velocity.y / 30);
-				//
-				//velocity.y -= 10;
-				//upBtnPressed = true;
-				//theEmitter.setYSpeed(100 + this.velocity.y, 250 + this.velocity.y);
-				//theEmitter.setXSpeed(-25 + this.velocity.x, 25 + this.velocity.x);
-				//theEmitter.emitParticle();
-				//theEmitter.emitParticle();
-				//theEmitter.emitParticle();
-			//}
-			//if ((FlxG.keys.S || FlxG.keys.DOWN) && fuel > 0 && !impulse && acceleration.x == 0 && acceleration.y == 0) {
-				//fuel -= FlxG.elapsed;
-				//
-				//theEmitter.x = this.x + 20 + (velocity.x / 30);
-				//theEmitter.y = this.y + 30 + (velocity.y / 30);
-				//
-				//velocity.y += 10;
-				//downBtnPressed = true;
-				//theEmitter.setYSpeed(-100 + this.velocity.y, -250 + this.velocity.y);
-				//theEmitter.setXSpeed(-25 + this.velocity.x, 25 + this.velocity.x);
-				//theEmitter.emitParticle();
-				//theEmitter.emitParticle();
-				//theEmitter.emitParticle();
-			//}
-			//
+		
+		if (keysJustReleased.SPACE || fillingTank && ((airTime >= AIRTIME) ||
+			(fillingFuelTank && fuel >= FUEL))) {
+			if (airTime >= AIRTIME)
+				airTime = AIRTIME;
+				
+			if (fuel >= FUEL)
+				fuel = FUEL;
+			
+			fillingTank = false;
+			velocity = oldVelocity;
+		}
+		
+		posToCalcTile.x = x + width/2;
+		posToCalcTile.y = y + height/2;
+		
+		//currentlyTile.x = Math.floor(posToCalcTile.x / 20/*Constants.TILE_SIZE*/);
+		//currentlyTile.y = Math.floor(posToCalcTile.y / 20/*Constants.TILE_SIZE*/);
+		
+		currentTileX = Math.floor(posToCalcTile.x / 20/*Constants.TILE_SIZE*/);
+		currentTileY = Math.floor(posToCalcTile.y / 20/*Constants.TILE_SIZE*/);
+		
+		//currentlyTileNum = gameCore.level.getTile(currentTileX, currentTileY);
+		//upRightTile = gameCore.level.getTile(currentTileX + 1, currentTileY - 1);
+		//upUpRightTile = gameCore.level.getTile(currentTileX + 1, currentTileY - 2);
+		//upLeftTile = gameCore.level.getTile(currentTileX - 1, currentTileY - 1);
+		//upUpLeftTile = gameCore.level.getTile(currentTileX - 1, currentTileY - 2);
+		//upTile = gameCore.level.getTile(currentTileX, currentTileY - 1);
+		//downRightTile = gameCore.level.getTile(currentTileX + 1, currentTileY + 1);
+		//downLeftTile = gameCore.level.getTile(currentTileX - 1, currentTileY + 1);
+		//downTile = gameCore.level.getTile(currentTileX, currentTileY + 1);
+		//rightTile = gameCore.level.getTile(currentTileX + 1, currentTileY);
+		//leftTile = gameCore.level.getTile(currentTileX - 1, currentTileY);
+		
+		if (!fillingTank) {
+			if((keysPressed.A || keysPressed.LEFT) && fuel > 0 && !impulse && acceleration.x == 0 && acceleration.y == 0) {
+				fuel -= FlxG.elapsed;
+				
+				theEmitter.x = this.x + 20 + (velocity.x / 30);
+				theEmitter.y = this.y + 30 + (velocity.y / 30);
+				
+				facing = FlxObject.LEFT;
+				velocity.x -= 10;
+				leftBtnPressed = true;
+				theEmitter.setXSpeed(100 + this.velocity.x, 250 + this.velocity.x);
+				theEmitter.setYSpeed(-25 + this.velocity.y, 25 + this.velocity.y);
+				theEmitter.emitParticle();
+				theEmitter.emitParticle();
+				theEmitter.emitParticle();
+			}
+			if((keysPressed.D || keysPressed.RIGHT) && fuel > 0 && !impulse && acceleration.x == 0 && acceleration.y == 0) {
+				fuel -= FlxG.elapsed;
+				
+				theEmitter.x = this.x + 20 + (velocity.x / 30);
+				theEmitter.y = this.y + 30 + (velocity.y / 30);
+				
+				facing = FlxObject.RIGHT;
+				velocity.x += 10;
+				rightBtnPressed = true;
+				theEmitter.setXSpeed(-100 + this.velocity.x, -250 + this.velocity.x);
+				theEmitter.setYSpeed(-25 + this.velocity.y, 25 + this.velocity.y);
+				theEmitter.emitParticle();
+				theEmitter.emitParticle();
+				theEmitter.emitParticle();
+			}
+			if ((keysPressed.W || keysPressed.UP) && fuel > 0 && !impulse && acceleration.x == 0 && acceleration.y == 0) {
+				fuel -= FlxG.elapsed;
+				
+				theEmitter.x = this.x + 20 + (velocity.x / 30);
+				theEmitter.y = this.y + 30 + (velocity.y / 30);
+				
+				velocity.y -= 10;
+				upBtnPressed = true;
+				theEmitter.setYSpeed(100 + this.velocity.y, 250 + this.velocity.y);
+				theEmitter.setXSpeed(-25 + this.velocity.x, 25 + this.velocity.x);
+				theEmitter.emitParticle();
+				theEmitter.emitParticle();
+				theEmitter.emitParticle();
+			}
+			if ((keysPressed.S || keysPressed.DOWN) && fuel > 0 && !impulse && acceleration.x == 0 && acceleration.y == 0) {
+				fuel -= FlxG.elapsed;
+				
+				theEmitter.x = this.x + 20 + (velocity.x / 30);
+				theEmitter.y = this.y + 30 + (velocity.y / 30);
+				
+				velocity.y += 10;
+				downBtnPressed = true;
+				theEmitter.setYSpeed(-100 + this.velocity.y, -250 + this.velocity.y);
+				theEmitter.setXSpeed(-25 + this.velocity.x, 25 + this.velocity.x);
+				theEmitter.emitParticle();
+				theEmitter.emitParticle();
+				theEmitter.emitParticle();
+			}
+			
 			////Walking on the right
 			//if (acceleration.x > 0) {
-				//if ((FlxG.keys.W || FlxG.keys.UP)) {
+				//if ((keysPressed.W || keysPressed.UP)) {
 					//velocity.y = -50;
-				//} else if ((FlxG.keys.S || FlxG.keys.DOWN)) {
+				//} else if ((keysPressed.S || keysPressed.DOWN)) {
 					//velocity.y = 50;
-				//} else if (FlxG.keys.D || FlxG.keys.RIGHT) {
+				//} else if (keysPressed.D || keysPressed.RIGHT) {
 					//if (upRightTile == 0) {
 						//velocity.y = -50;
 						//turning = true;
@@ -277,13 +302,13 @@ class MainCharacter extends FlxSprite
 						//velocity.y = 50;
 						//turning = true;
 					//}
-				//} else if ((FlxG.keys.justPressed("A") || FlxG.keys.justPressed("LEFT"))) {
+				//} else if (keysJustPressed.A || keysJustPressed.LEFT) {
 					//acceleration.x = 0;
 					//velocity.x = -50;
 					//velocity.y = 0;
 					//impulse = true;
 				//}
-			//} else if (turning && impulse && (FlxG.keys.D || FlxG.keys.RIGHT)) {
+			//} else if (turning && impulse && (keysPressed.D || keysPressed.RIGHT)) {
 				//if (upRightTile == 0) {
 					//turning = false;
 					//velocity.x = 50;
@@ -297,11 +322,11 @@ class MainCharacter extends FlxSprite
 			//
 			////Walking on the left
 			//if (acceleration.x < 0) {
-				//if ((FlxG.keys.W || FlxG.keys.UP)) {
+				//if ((keysPressed.W || keysPressed.UP)) {
 					//velocity.y = -50;
-				//} else if ((FlxG.keys.S || FlxG.keys.DOWN)) {
+				//} else if ((keysPressed.S || keysPressed.DOWN)) {
 					//velocity.y = 50;
-				//} else if (FlxG.keys.A || FlxG.keys.LEFT) {
+				//} else if (keysPressed.A || keysPressed.LEFT) {
 					//if (upLeftTile == 0) {
 						//velocity.y = -50;
 						//turning = true;
@@ -309,13 +334,13 @@ class MainCharacter extends FlxSprite
 						//velocity.y = 50;
 						//turning = true;
 					//}
-				//} else if ((FlxG.keys.justPressed("D") || FlxG.keys.justPressed("RIGHT"))) {
+				//} else if (keysJustPressed.D || keysJustPressed.RIGHT) {
 					//acceleration.x = 0;
 					//velocity.x = 50;
 					//velocity.y = 0;
 					//impulse = true;
 				//}
-			//} else if (turning && impulse && (FlxG.keys.A || FlxG.keys.LEFT)) {
+			//} else if (turning && impulse && (keysPressed.A || keysPressed.LEFT)) {
 				//if (upLeftTile == 0) {
 					//turning = false;
 					//velocity.x = -50;
@@ -329,11 +354,11 @@ class MainCharacter extends FlxSprite
 			//
 			////Walking on down
 			//if (acceleration.y > 0) {
-				//if ((FlxG.keys.A || FlxG.keys.LEFT)) {
+				//if ((keysPressed.A || keysPressed.LEFT)) {
 					//velocity.x = -50;
-				//} else if ((FlxG.keys.D || FlxG.keys.RIGHT)) {
+				//} else if ((keysPressed.D || keysPressed.RIGHT)) {
 					//velocity.x = 50;
-				//} else if (FlxG.keys.S || FlxG.keys.DOWN) {
+				//} else if (keysPressed.S || keysPressed.DOWN) {
 					//if (downLeftTile == 0) {
 						//velocity.x = -50;
 						//turning = true;
@@ -341,13 +366,13 @@ class MainCharacter extends FlxSprite
 						//velocity.x = 50;
 						//turning = true;
 					//}
-				//} else if ((FlxG.keys.justPressed("W") || FlxG.keys.justPressed("UP"))) {
+				//} else if (keysJustPressed.W || keysJustPressed.UP) {
 					//acceleration.y = 0;
 					//velocity.x = 0;
 					//velocity.y = -50;
 					//impulse = true;
 				//}
-			//} else if (turning && impulse && (FlxG.keys.S || FlxG.keys.DOWN)) {
+			//} else if (turning && impulse && (keysPressed.S || keysPressed.DOWN)) {
 				//if (downLeftTile == 0) {
 					//turning = false;
 					//velocity.y = 50;
@@ -361,11 +386,11 @@ class MainCharacter extends FlxSprite
 			//
 			////Walking on up
 			//if (acceleration.y < 0) {
-				//if ((FlxG.keys.A || FlxG.keys.LEFT)) {
+				//if ((keysPressed.A || keysPressed.LEFT)) {
 					//velocity.x = -50;
-				//} else if ((FlxG.keys.D || FlxG.keys.RIGHT)) {
+				//} else if ((keysPressed.D || keysPressed.RIGHT)) {
 					//velocity.x = 50;
-				//} else if (FlxG.keys.W || FlxG.keys.UP) {
+				//} else if (keysPressed.W || keysPressed.UP) {
 					//if (upLeftTile == 0) {
 						//velocity.x = -50;
 						//turning = true;
@@ -373,13 +398,13 @@ class MainCharacter extends FlxSprite
 						//velocity.x = 50;
 						//turning = true;
 					//}
-				//} else if ((FlxG.keys.justPressed("S") || FlxG.keys.justPressed("DOWN"))) {
+				//} else if (keysJustPressed.S || keysJustPressed.DOWN) {
 					//acceleration.y = 0;
 					//velocity.y = 50;
 					//velocity.x = 0;
 					//impulse = true;
 				//}
-			//} else if (turning && impulse && (FlxG.keys.W || FlxG.keys.UP)) {
+			//} else if (turning && impulse && (keysPressed.W || keysPressed.UP)) {
 				//if (upLeftTile == 0) {
 					//turning = false;
 					//velocity.y = -50;
@@ -390,22 +415,22 @@ class MainCharacter extends FlxSprite
 					//velocity.x = -50;
 				//}
 			//}
-		//}
-		//
-		//if (FlxG.keys.justReleased("A") || FlxG.keys.justReleased("LEFT")){
-			//leftBtnPressed = impulse = turning = false;
-		//}
-		//if(FlxG.keys.justReleased("D") || FlxG.keys.justReleased("RIGHT")){
-			//rightBtnPressed = impulse = turning = false;
-		//}
-		//if (FlxG.keys.justReleased("W") || FlxG.keys.justReleased("UP")){
-			//upBtnPressed = impulse = turning = false;
-		//}
-		//if (FlxG.keys.justReleased("S") || FlxG.keys.justReleased("DOWN")){
-			//downBtnPressed = impulse = turning = false;
-		//}
-	//}
-	//
+		}
+		
+		if (keysJustReleased.A || keysJustReleased.LEFT){
+			leftBtnPressed = impulse = turning = false;
+		}
+		if(keysJustReleased.D || keysJustReleased.RIGHT){
+			rightBtnPressed = impulse = turning = false;
+		}
+		if (keysJustReleased.W || keysJustReleased.UP){
+			upBtnPressed = impulse = turning = false;
+		}
+		if (keysJustReleased.S || keysJustReleased.DOWN){
+			downBtnPressed = impulse = turning = false;
+		}
+	}
+	
 	//private function fillTank(tank: Tank):void {
 		//if (FlxG.keys.justPressed("SPACE")) {
 			//oldVelocity = new FlxPoint(velocity.x, velocity.y);
@@ -484,12 +509,12 @@ class MainCharacter extends FlxSprite
 		//}
 	//}
 	//
-	//public function get suitDamage():Number 
+	//public function get suitDamage():Float 
 	//{
 		//return _suitDamage;
 	//}
 	//
-	//public function set suitDamage(value:Number):void 
+	//public function set suitDamage(value:Float):void 
 	//{
 		//_suitDamage = value;
 		//if (_suitDamage > 100)
