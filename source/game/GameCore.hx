@@ -73,34 +73,6 @@ class GameCore extends FlxState
 	private var redBackground: FlxSprite;
 	private var fadingOut:Bool;
 	
-	public function new() 
-	{
-		super();
-		
-		//backgroundLayer = new FlxGroup();
-		//gameLayer = new FlxGroup();
-		//boxesList = new FlxGroup();
-		//interfaceLayer = new FlxGroup();
-		//inventoryItemsList = new FlxGroup();
-		//level = new FlxTilemap();
-		////objectsMap = new FlxTilemap();
-		////backgroundMap = new FlxTilemap();
-		//checkPointsList = new FlxGroup();
-		//enemiesList = new FlxGroup();
-		//inventory = new Inventory();
-		//airTanksList = new FlxGroup();
-		//fuelTanksList = new FlxGroup();
-		//
-		//redBackground = new FlxSprite();
-		//redBackground.scrollFactor.x = 0;
-		//redBackground.scrollFactor.y = 0;
-		//
-		////hudFormatter = new NumberFormatter(LocaleID.DEFAULT);
-		////hudFormatter.fractionalDigits = 3;
-		////hudFormatter.leadingZero = true;
-		////hudFormatter.trailingZeros = true;
-	}
-	
 	override public function create():Void
 	{
 		super.create();
