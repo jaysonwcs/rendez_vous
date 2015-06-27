@@ -83,8 +83,8 @@ class GameCore extends FlxState
 		interfaceLayer = new FlxGroup();
 		inventoryItemsList = new FlxGroup();
 		level = new FlxTilemap();
-		//objectsMap = new FlxTilemap();
-		//backgroundMap = new FlxTilemap();
+		objectsMap = new FlxTilemap();
+		backgroundMap = new FlxTilemap();
 		checkPointsList = new FlxGroup();
 		enemiesList = new FlxGroup();
 		inventory = new Inventory();
@@ -116,14 +116,14 @@ class GameCore extends FlxState
 		//gameLayer.add(checkPoints);
 		//gameLayer.add(enemies);
 		
-		//backgroundLayer.add(backgroundMap);
+		backgroundLayer.add(backgroundMap);
 		
 		player = new MainCharacter(this, inventory);
 		
 		setupCamera();
 		
 		LevelGenerator.generateLevel(this);
-		//objectsMap.destroy();
+		objectsMap.destroy();
 		
 		gameLayer.add(player);
 		

@@ -20,33 +20,33 @@ class LevelGenerator
 	
 	public static function generateLevel(level:GameCore):Void {
 		LevelGenerator.state = level;
-		//LevelGenerator.map = state.objectsMap;
+		LevelGenerator.map = state.objectsMap;
 		
 		startPlayerPos();
 		//airTanks();
 		//fuelTanks();
-		//radar();
+		radar();
 	}
 	
 	static private function radar():Void {
-		//var dotPositions: Array<FlxPoint>;
-		//var totalPositions: Array<FlxPoint> = new Array();
-		//
-		//for (i in 1...60) 
-		//{
-			//dotPositions = state.level.getTileCoords(i, false);
-		//
-			//if (dotPositions != null)
-			//{
-				//for (pos in dotPositions) 
-				//{
-					//totalPositions.push(pos);
-				//}
-			//}
-		//}
-			//
-		//state.map = new Radar(10, 90, state, totalPositions);
-		//state.interfaceLayer.add(state.map);
+		var dotPositions: Array<FlxPoint>;
+		var totalPositions: Array<FlxPoint> = new Array();
+		
+		for (i in 1...60) 
+		{
+			dotPositions = state.level.getTileCoords(i, false);
+		
+			if (dotPositions != null)
+			{
+				for (pos in dotPositions) 
+				{
+					totalPositions.push(pos);
+				}
+			}
+		}
+			
+		state.map = new Radar(10, 90, state, totalPositions);
+		state.interfaceLayer.add(state.map);
 		//state.interfaceLayer.add(state.map.player);
 		//state.interfaceLayer.add(state.map.bussola);
 	}
@@ -82,18 +82,16 @@ class LevelGenerator
 	
 	static public function startPlayerPos():Void 
 	{
-		//var players: Array<FlxPoint> = state.objectsMap.getTileCoords(1, false);
+		var players: Array<FlxPoint> = state.objectsMap.getTileCoords(1, false);
 		
-		//if (players != null)
-		//{
-			//for (pos in players) 
-			//{
-				//BUG: Problema com a câmera, qnd personagem ta fora da tela dá pau!
-				//BUG: provavelmente relacionado com o update do game
-				//state.player.x = pos.x;
-				//state.player.y = pos.y;
-			//}
-		//}
+		if (players != null)
+		{
+			for (pos in players) 
+			{
+				state.player.x = pos.x;
+				state.player.y = pos.y;
+			}
+		}
 	}
 	
 }
