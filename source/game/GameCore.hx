@@ -137,19 +137,19 @@ class GameCore extends FlxState
 		txtXVelocity.scrollFactor.x = 0;
 		txtXVelocity.scrollFactor.y = 0;
 		interfaceLayer.add(txtXVelocity);
-		//txtXVelocity.text = Math.abs(player.velocity.x).toString();
+		txtXVelocity.text = Std.string(Math.abs(player.velocity.x));
 		
 		txtAir = new FlxText(10, 60, 200);
 		txtAir.scrollFactor.x = 0;
 		txtAir.scrollFactor.y = 0;
 		interfaceLayer.add(txtAir);
-		//txtAir.text = player.airTime.toString();
+		txtAir.text = Std.string(player.airTime);
 		
 		txtFuel = new FlxText(10, 70, 200);
 		txtFuel.scrollFactor.x = 0;
 		txtFuel.scrollFactor.y = 0;
 		interfaceLayer.add(txtFuel);
-		//txtFuel.text = player.fuel.toString();
+		txtFuel.text = Std.string(player.fuel);
 		
 		airBarBase = new FlxSprite(txtAir.x + 79, txtAir.y + 1);
 		airBarBase.makeGraphic(202, 7, 0x7fffffff);
@@ -175,12 +175,12 @@ class GameCore extends FlxState
 		fuelBar.scrollFactor.y = 0;
 		interfaceLayer.add(fuelBar);
 		
-		//txtYVelocity = new FlxText(10, 20, 200);
-		//txtYVelocity.scrollFactor.x = 0;
-		//txtYVelocity.scrollFactor.y = 0;
-		//interfaceLayer.add(txtYVelocity);
-		//txtYVelocity.text = Math.abs(player.velocity.y).toString();
-		//txtYVelocity.text = player.life.toString();
+		txtYVelocity = new FlxText(10, 20, 200);
+		txtYVelocity.scrollFactor.x = 0;
+		txtYVelocity.scrollFactor.y = 0;
+		interfaceLayer.add(txtYVelocity);
+		txtYVelocity.text = Std.string(Math.abs(player.velocity.y));
+		txtYVelocity.text = Std.string(player.life);
 		
 		directionH = new FlxText(10, 30, 200);
 		directionH.scrollFactor.x = 0;
@@ -197,19 +197,19 @@ class GameCore extends FlxState
 		txtDistance.scrollFactor.y = 0;
 		interfaceLayer.add(txtDistance);
 		
-		//txtDangerSuit = new FlxText(10, map.y + map.height + 5, 200);
-		//txtDangerSuit.scrollFactor.x = 0;
-		//txtDangerSuit.scrollFactor.y = 0;
-		//interfaceLayer.add(txtDangerSuit);
+		txtDangerSuit = new FlxText(10, map.y + map.height + 5, 200);
+		txtDangerSuit.scrollFactor.x = 0;
+		txtDangerSuit.scrollFactor.y = 0;
+		interfaceLayer.add(txtDangerSuit);
 		
-		//txtLeak = new FlxText(10, txtDangerSuit.y + txtDangerSuit.height + 5, 200);
-		//txtLeak.scrollFactor.x = 0;
-		//txtLeak.scrollFactor.y = 0;
-		//interfaceLayer.add(txtLeak);
-		//txtLeak.text = "Vazamento";
-		//txtLeak.visible = false;
+		txtLeak = new FlxText(10, txtDangerSuit.y + txtDangerSuit.height + 5, 200);
+		txtLeak.scrollFactor.x = 0;
+		txtLeak.scrollFactor.y = 0;
+		interfaceLayer.add(txtLeak);
+		txtLeak.text = "Vazamento";
+		txtLeak.visible = false;
 		
-		suitDamageBar = new HudBar(/*0xffff0000, player, "suitDamage", 100, 1, 10, txtDangerSuit.y + 10*/);
+		suitDamageBar = new HudBar(0xffff0000, player, "suitDamage", 100, 1, 10, txtDangerSuit.y + 10);
 		interfaceLayer.add(suitDamageBar);
 		
 		//redBackground.makeGraphic(FlxG.width, FlxG.height, 0xffff0000);
