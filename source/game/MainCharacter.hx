@@ -154,6 +154,9 @@ class MainCharacter extends FlxSprite
 		suitDamage = 0;
 		
 		this.gameCore = gameCore;
+		
+		FlxG.watch.add(acceleration, "x");
+		FlxG.watch.add(velocity, "x");
 	}
 	
 	override public function update():Void {
