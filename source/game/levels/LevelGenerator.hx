@@ -23,8 +23,8 @@ class LevelGenerator
 		LevelGenerator.map = state.objectsMap;
 		
 		startPlayerPos();
-		//airTanks();
-		//fuelTanks();
+		airTanks();
+		fuelTanks();
 		radar();
 	}
 	
@@ -47,37 +47,37 @@ class LevelGenerator
 			
 		state.map = new Radar(10, 90, state, totalPositions);
 		state.interfaceLayer.add(state.map);
-		//state.interfaceLayer.add(state.map.player);
-		//state.interfaceLayer.add(state.map.bussola);
+		state.interfaceLayer.add(state.map.player);
+		state.interfaceLayer.add(state.map.bussola);
 	}
 	
 	static private function fuelTanks():Void {
-		//var fuelTanks: Array<FlxPoint> = state.objectsMap.getTileCoords(3, false);
-		//var fuelTank: FuelTank;
-		//
-		//if (fuelTanks != null)
-		//{
-			//for (pos in fuelTanks) {
-				//fuelTank = new FuelTank(75, 75, pos.x, pos.y);
-				//state.fuelTanksList.add(fuelTank);
-				//state.gameLayer.add(fuelTank.volumeBar);
-			//}
-		//}
+		var fuelTanks: Array<FlxPoint> = state.objectsMap.getTileCoords(3, false);
+		var fuelTank: FuelTank;
+		
+		if (fuelTanks != null)
+		{
+			for (pos in fuelTanks) {
+				fuelTank = new FuelTank(75, 75, pos.x, pos.y);
+				state.fuelTanksList.add(fuelTank);
+				state.gameLayer.add(fuelTank.volumeBar);
+			}
+		}
 	}
 	
 	static private function airTanks():Void {
-		//var airTanks: Array<FlxPoint> = state.objectsMap.getTileCoords(2, false);
-		//var airTank: AirTank;
-		//
-		//if (airTanks != null)
-		//{
-			//for (pos in airTanks) 
-			//{
-				//airTank = new AirTank(1500, 1500, pos.x, pos.y);
-				//state.airTanksList.add(airTank);
-				//state.gameLayer.add(airTank.volumeBar);
-			//}
-		//}
+		var airTanks: Array<FlxPoint> = state.objectsMap.getTileCoords(2, false);
+		var airTank: AirTank;
+		
+		if (airTanks != null)
+		{
+			for (pos in airTanks) 
+			{
+				airTank = new AirTank(1500, 1500, pos.x, pos.y);
+				state.airTanksList.add(airTank);
+				state.gameLayer.add(airTank.volumeBar);
+			}
+		}
 	}
 	
 	static public function startPlayerPos():Void 

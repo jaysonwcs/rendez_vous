@@ -83,14 +83,14 @@ class Radar extends FlxSprite
 		
 		scrollFactor.x = 0;
 		scrollFactor.y = 0;
-		//makeGraphic(WIDTH, HEIGHT, 0x00000000);
+		makeGraphic(WIDTH, HEIGHT, 0x00000000);
 		
-		//player = new FlxSprite(x + width / 2, y + height / 2);
-		//player.makeGraphic(3, 3, 0xffffffff);
-		//player.x -= player.width / 2;
-		//player.y -= player.height / 2;
-		//player.scrollFactor.x = 0;
-		//player.scrollFactor.y = 0;
+		player = new FlxSprite(x + width / 2, y + height / 2);
+		player.makeGraphic(3, 3, 0xffffffff);
+		player.x -= player.width / 2;
+		player.y -= player.height / 2;
+		player.scrollFactor.x = 0;
+		player.scrollFactor.y = 0;
 	}
 	
 	override public function update():Void {

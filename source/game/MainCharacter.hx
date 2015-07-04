@@ -9,6 +9,9 @@ import game.inventory.Inventory;
 import flixel.util.FlxPoint;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
+import game.objects.AirTank;
+import game.objects.FuelTank;
+import game.objects.Tank;
 
 /**
  * ...
@@ -78,20 +81,22 @@ class MainCharacter extends FlxSprite
 	private var fillingFuelTank:Bool;
 	private var fillingTank: Bool;
 	
-	private var suitDamage: Float;
+	public var suitDamage(default, set): Float;
 	
 	private var keysJustPressed: FlxKeyList;
 	private var keysPressed: FlxKeyList;
 	private var keysJustReleased: FlxKeyList;
 	
+	private var flicking: Bool = false;
+	private var lastFlickingStatus: Bool;
+	private var flickerTime: Float;
+	private static inline var FLICKER_TIME: Float = 0.1;
+	private var flickerDuration: Float;
+	
+	
 	public function new(gameCore: GameCore, inventory: Inventory, fuel: Float = FUEL) 
 	{
 		super();
-		
-		//TEST
-		x = 0;
-		y = 0;
-		makeGraphic(20, 20);
 		
 		loadGraphic(AssetPaths.astronauta__png, true, 39, 61);
 		
@@ -153,6 +158,9 @@ class MainCharacter extends FlxSprite
 	override public function update():Void {
 		super.update();
 		
+		if (flicking)
+			flicker();
+		
 		if (airTime >= 0)
 			if (suitDamage >= 100)
 				airTime -= FlxG.elapsed * 5;
@@ -161,12 +169,12 @@ class MainCharacter extends FlxSprite
 		else {
 			lastBreath -= FlxG.elapsed;
 			
-			//if (lastBreath > 5)
-				//gameCore.blinkRed(0.05);
-			//else if (lastBreath > 2)
-				//gameCore.blinkRed(0.1);
-			//else
-				//gameCore.blinkRed(0.2);
+			if (lastBreath > 5)
+				gameCore.blinkRed(0.05);
+			else if (lastBreath > 2)
+				gameCore.blinkRed(0.1);
+			else
+				gameCore.blinkRed(0.2);
 		}
 		
 		if (lastBreath <= 0)
@@ -190,10 +198,10 @@ class MainCharacter extends FlxSprite
 			});
 		}
 		
-		//if (keysPressed.SPACE) {
-			//FlxG.overlap(this, gameCore.airTanksList, fillAirTank);
-			//FlxG.overlap(this, gameCore.fuelTanksList, fillFuelTank);
-		//}
+		if (keysPressed.SPACE) {
+			FlxG.overlap(this, gameCore.airTanksList, fillAirTank);
+			FlxG.overlap(this, gameCore.fuelTanksList, fillFuelTank);
+		}
 		
 		if (keysJustReleased.SPACE || fillingTank && ((airTime >= AIRTIME) ||
 			(fillingFuelTank && fuel >= FUEL))) {
@@ -216,17 +224,17 @@ class MainCharacter extends FlxSprite
 		currentTileX = Math.floor(posToCalcTile.x / 20/*Constants.TILE_SIZE*/);
 		currentTileY = Math.floor(posToCalcTile.y / 20/*Constants.TILE_SIZE*/);
 		
-		//currentlyTileNum = gameCore.level.getTile(currentTileX, currentTileY);
-		//upRightTile = gameCore.level.getTile(currentTileX + 1, currentTileY - 1);
-		//upUpRightTile = gameCore.level.getTile(currentTileX + 1, currentTileY - 2);
-		//upLeftTile = gameCore.level.getTile(currentTileX - 1, currentTileY - 1);
-		//upUpLeftTile = gameCore.level.getTile(currentTileX - 1, currentTileY - 2);
-		//upTile = gameCore.level.getTile(currentTileX, currentTileY - 1);
-		//downRightTile = gameCore.level.getTile(currentTileX + 1, currentTileY + 1);
-		//downLeftTile = gameCore.level.getTile(currentTileX - 1, currentTileY + 1);
-		//downTile = gameCore.level.getTile(currentTileX, currentTileY + 1);
-		//rightTile = gameCore.level.getTile(currentTileX + 1, currentTileY);
-		//leftTile = gameCore.level.getTile(currentTileX - 1, currentTileY);
+		currentlyTileNum = gameCore.level.getTile(currentTileX, currentTileY);
+		upRightTile = gameCore.level.getTile(currentTileX + 1, currentTileY - 1);
+		upUpRightTile = gameCore.level.getTile(currentTileX + 1, currentTileY - 2);
+		upLeftTile = gameCore.level.getTile(currentTileX - 1, currentTileY - 1);
+		upUpLeftTile = gameCore.level.getTile(currentTileX - 1, currentTileY - 2);
+		upTile = gameCore.level.getTile(currentTileX, currentTileY - 1);
+		downRightTile = gameCore.level.getTile(currentTileX + 1, currentTileY + 1);
+		downLeftTile = gameCore.level.getTile(currentTileX - 1, currentTileY + 1);
+		downTile = gameCore.level.getTile(currentTileX, currentTileY + 1);
+		rightTile = gameCore.level.getTile(currentTileX + 1, currentTileY);
+		leftTile = gameCore.level.getTile(currentTileX - 1, currentTileY);
 		
 		if (!fillingTank) {
 			if((keysPressed.A || keysPressed.LEFT) && fuel > 0 && !impulse && acceleration.x == 0 && acceleration.y == 0) {
@@ -288,133 +296,133 @@ class MainCharacter extends FlxSprite
 				theEmitter.emitParticle();
 			}
 			
-			////Walking on the right
-			//if (acceleration.x > 0) {
-				//if ((keysPressed.W || keysPressed.UP)) {
-					//velocity.y = -50;
-				//} else if ((keysPressed.S || keysPressed.DOWN)) {
-					//velocity.y = 50;
-				//} else if (keysPressed.D || keysPressed.RIGHT) {
-					//if (upRightTile == 0) {
-						//velocity.y = -50;
-						//turning = true;
-					//} else if (downRightTile == 0) {
-						//velocity.y = 50;
-						//turning = true;
-					//}
-				//} else if (keysJustPressed.A || keysJustPressed.LEFT) {
-					//acceleration.x = 0;
-					//velocity.x = -50;
-					//velocity.y = 0;
-					//impulse = true;
-				//}
-			//} else if (turning && impulse && (keysPressed.D || keysPressed.RIGHT)) {
-				//if (upRightTile == 0) {
-					//turning = false;
-					//velocity.x = 50;
-					//velocity.y = 50;
-				//} else if (downRightTile == 0) {
-					//turning = false;
-					//velocity.x = 50;
-					//velocity.y = -50;
-				//}
-			//}
-			//
-			////Walking on the left
-			//if (acceleration.x < 0) {
-				//if ((keysPressed.W || keysPressed.UP)) {
-					//velocity.y = -50;
-				//} else if ((keysPressed.S || keysPressed.DOWN)) {
-					//velocity.y = 50;
-				//} else if (keysPressed.A || keysPressed.LEFT) {
-					//if (upLeftTile == 0) {
-						//velocity.y = -50;
-						//turning = true;
-					//} else if (downLeftTile == 0) {
-						//velocity.y = 50;
-						//turning = true;
-					//}
-				//} else if (keysJustPressed.D || keysJustPressed.RIGHT) {
-					//acceleration.x = 0;
-					//velocity.x = 50;
-					//velocity.y = 0;
-					//impulse = true;
-				//}
-			//} else if (turning && impulse && (keysPressed.A || keysPressed.LEFT)) {
-				//if (upLeftTile == 0) {
-					//turning = false;
-					//velocity.x = -50;
-					//velocity.y = 50;
-				//} else if (downLeftTile == 0) {
-					//turning = false;
-					//velocity.x = -50;
-					//velocity.y = -50;
-				//}
-			//}
-			//
-			////Walking on down
-			//if (acceleration.y > 0) {
-				//if ((keysPressed.A || keysPressed.LEFT)) {
-					//velocity.x = -50;
-				//} else if ((keysPressed.D || keysPressed.RIGHT)) {
-					//velocity.x = 50;
-				//} else if (keysPressed.S || keysPressed.DOWN) {
-					//if (downLeftTile == 0) {
-						//velocity.x = -50;
-						//turning = true;
-					//} else if (downRightTile == 0) {
-						//velocity.x = 50;
-						//turning = true;
-					//}
-				//} else if (keysJustPressed.W || keysJustPressed.UP) {
-					//acceleration.y = 0;
-					//velocity.x = 0;
-					//velocity.y = -50;
-					//impulse = true;
-				//}
-			//} else if (turning && impulse && (keysPressed.S || keysPressed.DOWN)) {
-				//if (downLeftTile == 0) {
-					//turning = false;
-					//velocity.y = 50;
-					//velocity.x = 50;
-				//} else if (downRightTile == 0) {
-					//turning = false;
-					//velocity.y = 50;
-					//velocity.x = -50;
-				//}
-			//}
-			//
-			////Walking on up
-			//if (acceleration.y < 0) {
-				//if ((keysPressed.A || keysPressed.LEFT)) {
-					//velocity.x = -50;
-				//} else if ((keysPressed.D || keysPressed.RIGHT)) {
-					//velocity.x = 50;
-				//} else if (keysPressed.W || keysPressed.UP) {
-					//if (upLeftTile == 0) {
-						//velocity.x = -50;
-						//turning = true;
-					//} else if (upRightTile == 0) {
-						//velocity.x = 50;
-						//turning = true;
-					//}
-				//} else if (keysJustPressed.S || keysJustPressed.DOWN) {
-					//acceleration.y = 0;
-					//velocity.y = 50;
-					//velocity.x = 0;
-					//impulse = true;
-				//}
-			//} else if (turning && impulse && (keysPressed.W || keysPressed.UP)) {
-				//if (upLeftTile == 0) {
-					//turning = false;
-					//velocity.y = -50;
-					//velocity.x = 50;
-				//} else if (upRightTile == 0) {
-					//turning = false;
-					//velocity.y = -50;
-					//velocity.x = -50;
-				//}
-			//}
+			//Walking on the right
+			if (acceleration.x > 0) {
+				if ((keysPressed.W || keysPressed.UP)) {
+					velocity.y = -50;
+				} else if ((keysPressed.S || keysPressed.DOWN)) {
+					velocity.y = 50;
+				} else if (keysPressed.D || keysPressed.RIGHT) {
+					if (upRightTile == 0) {
+						velocity.y = -50;
+						turning = true;
+					} else if (downRightTile == 0) {
+						velocity.y = 50;
+						turning = true;
+					}
+				} else if (keysJustPressed.A || keysJustPressed.LEFT) {
+					acceleration.x = 0;
+					velocity.x = -50;
+					velocity.y = 0;
+					impulse = true;
+				}
+			} else if (turning && impulse && (keysPressed.D || keysPressed.RIGHT)) {
+				if (upRightTile == 0) {
+					turning = false;
+					velocity.x = 50;
+					velocity.y = 50;
+				} else if (downRightTile == 0) {
+					turning = false;
+					velocity.x = 50;
+					velocity.y = -50;
+				}
+			}
+			
+			//Walking on the left
+			if (acceleration.x < 0) {
+				if ((keysPressed.W || keysPressed.UP)) {
+					velocity.y = -50;
+				} else if ((keysPressed.S || keysPressed.DOWN)) {
+					velocity.y = 50;
+				} else if (keysPressed.A || keysPressed.LEFT) {
+					if (upLeftTile == 0) {
+						velocity.y = -50;
+						turning = true;
+					} else if (downLeftTile == 0) {
+						velocity.y = 50;
+						turning = true;
+					}
+				} else if (keysJustPressed.D || keysJustPressed.RIGHT) {
+					acceleration.x = 0;
+					velocity.x = 50;
+					velocity.y = 0;
+					impulse = true;
+				}
+			} else if (turning && impulse && (keysPressed.A || keysPressed.LEFT)) {
+				if (upLeftTile == 0) {
+					turning = false;
+					velocity.x = -50;
+					velocity.y = 50;
+				} else if (downLeftTile == 0) {
+					turning = false;
+					velocity.x = -50;
+					velocity.y = -50;
+				}
+			}
+			
+			//Walking on down
+			if (acceleration.y > 0) {
+				if ((keysPressed.A || keysPressed.LEFT)) {
+					velocity.x = -50;
+				} else if ((keysPressed.D || keysPressed.RIGHT)) {
+					velocity.x = 50;
+				} else if (keysPressed.S || keysPressed.DOWN) {
+					if (downLeftTile == 0) {
+						velocity.x = -50;
+						turning = true;
+					} else if (downRightTile == 0) {
+						velocity.x = 50;
+						turning = true;
+					}
+				} else if (keysJustPressed.W || keysJustPressed.UP) {
+					acceleration.y = 0;
+					velocity.x = 0;
+					velocity.y = -50;
+					impulse = true;
+				}
+			} else if (turning && impulse && (keysPressed.S || keysPressed.DOWN)) {
+				if (downLeftTile == 0) {
+					turning = false;
+					velocity.y = 50;
+					velocity.x = 50;
+				} else if (downRightTile == 0) {
+					turning = false;
+					velocity.y = 50;
+					velocity.x = -50;
+				}
+			}
+			
+			//Walking on up
+			if (acceleration.y < 0) {
+				if ((keysPressed.A || keysPressed.LEFT)) {
+					velocity.x = -50;
+				} else if ((keysPressed.D || keysPressed.RIGHT)) {
+					velocity.x = 50;
+				} else if (keysPressed.W || keysPressed.UP) {
+					if (upLeftTile == 0) {
+						velocity.x = -50;
+						turning = true;
+					} else if (upRightTile == 0) {
+						velocity.x = 50;
+						turning = true;
+					}
+				} else if (keysJustPressed.S || keysJustPressed.DOWN) {
+					acceleration.y = 0;
+					velocity.y = 50;
+					velocity.x = 0;
+					impulse = true;
+				}
+			} else if (turning && impulse && (keysPressed.W || keysPressed.UP)) {
+				if (upLeftTile == 0) {
+					turning = false;
+					velocity.y = -50;
+					velocity.x = 50;
+				} else if (upRightTile == 0) {
+					turning = false;
+					velocity.y = -50;
+					velocity.x = -50;
+				}
+			}
 		}
 		
 		if (keysJustReleased.A || keysJustReleased.LEFT){
@@ -431,96 +439,131 @@ class MainCharacter extends FlxSprite
 		}
 	}
 	
-	//private function fillTank(tank: Tank):void {
-		//if (FlxG.keys.justPressed("SPACE")) {
-			//oldVelocity = new FlxPoint(velocity.x, velocity.y);
-			//velocity.x = 0;
-			//velocity.y = 0;
-		//}
-		//
-		//fillingTank = true;
-		//
-		//if (tank.volume > 0) {
-			//tank.volume -= 1;
-			//
-			//if (tank is AirTank) {
-				//airTime += 1;
-			//} else if (tank is FuelTank) {
-				//fuel += 1;
-			//}
-		//} else {
-			//fillingTank = false;
-			//velocity = oldVelocity;
-		//}
-	//}
-	//
-	//private function fillAirTank(obj1: FlxObject, obj2: FlxObject):void {
-		//if (airTime < AIRTIME && obj2 is AirTank) {
-			//lastBreath = LASTBREATH;
-			//gameCore.resetBlinkRed();
-			//fillTank(Tank(obj2));
-		//} else {
-			//fillingTank = false;
-			//velocity = oldVelocity;
-		//}
-	//}
-	//
-	//private function fillFuelTank(obj1: FlxObject, obj2: FlxObject):void {
-		//if (fuel < FUEL && obj2 is FuelTank) {
-			//fillTank(Tank(obj2));
-		//} else {
-			//fillingTank = false;
-			//velocity = oldVelocity;
-		//}
-	//}
-	//
-	//override public function kill():void {
-		//FlxG.resetState();
-		//
-		//velocity.x = 0;
-		//velocity.y = 0;
-		//
-		//airTime = 50;
-		//life = 3;
-		//gameCore.resetHud();
-	//}
-	//
-	//public function causeHurt():void {
-		//if (!dying) {
-			//FlxG.play(hurtSfx);
-			//
-			//dying = true;
-			//life -= 1;
-			//this.flicker(1);
-			//gameCore.life = life;
-			//velocity.x = -200;
-			//velocity.y = -200;
-			//
-			//if (life <= 0) {
-				//kill();
-			//}
-		//}
-		//else if (counter > 0) {
-			//counter -= FlxG.elapsed;
-		//}
-		//else if (counter <= 0) {
-			//counter = 1;
-			//dying = false;
-		//}
-	//}
-	//
-	//public function get suitDamage():Float 
-	//{
-		//return _suitDamage;
-	//}
-	//
-	//public function set suitDamage(value:Float):void 
-	//{
-		//_suitDamage = value;
-		//if (_suitDamage > 100)
-			//_suitDamage = 100;
-		//else if (_suitDamage < 0)
-			//_suitDamage = 0;
-	//}
+	private function fillTank(tank: Tank):Void
+	{
+		if (keysJustPressed.SPACE) {
+			oldVelocity = new FlxPoint(velocity.x, velocity.y);
+			velocity.x = 0;
+			velocity.y = 0;
+		}
+		
+		fillingTank = true;
+		
+		if (tank.volume > 0) {
+			tank.volume -= 1;
+			
+			if (Std.is(tank, AirTank)) {
+				airTime += 1;
+			} else if (Std.is(tank, FuelTank)) {
+				fuel += 1;
+			}
+		} else {
+			fillingTank = false;
+			velocity = oldVelocity;
+		}
+	}
+	
+	private function fillAirTank(obj1: FlxObject, obj2: FlxObject):Void
+	{
+		if (airTime < AIRTIME && Std.is(obj2, AirTank)) {
+			lastBreath = LASTBREATH;
+			gameCore.resetBlinkRed();
+			fillTank(cast(obj2, Tank));
+		} else {
+			fillingTank = false;
+			velocity = oldVelocity;
+		}
+	}
+	
+	private function fillFuelTank(obj1: FlxObject, obj2: FlxObject):Void
+	{
+		if (fuel < FUEL && Std.is(obj2, FuelTank)) {
+			fillTank(cast(obj2, Tank));
+		} else {
+			fillingTank = false;
+			velocity = oldVelocity;
+		}
+	}
+	
+	override public function kill():Void {
+		FlxG.resetState();
+		
+		velocity.x = 0;
+		velocity.y = 0;
+		
+		airTime = 50;
+		life = 3;
+		gameCore.resetHud();
+	}
+	
+	public function causeHurt():Void {
+		if (!dying) {
+			FlxG.sound.play(AssetPaths.hurt__mp3);
+			
+			dying = true;
+			life -= 1;
+			startFlicker(1);
+			gameCore.life = life;
+			velocity.x = -200;
+			velocity.y = -200;
+			
+			if (life <= 0) {
+				kill();
+			}
+		}
+		else if (counter > 0) {
+			counter -= FlxG.elapsed;
+		}
+		else if (counter <= 0) {
+			counter = 1;
+			dying = false;
+		}
+	}
+	
+	function startFlicker(duration: Float) 
+	{
+		flicking = true;
+		flickerDuration = duration;
+		flickerTime = FLICKER_TIME;
+	}
+	
+	function flicker() 
+	{
+		flickerTime -= FlxG.elapsed;
+		flickerDuration -= FlxG.elapsed;
+		
+		if (flickerDuration <= 0)
+		{
+			flicking = false;
+			alpha = 1;
+		}
+		else 
+		{
+			if (flickerTime < 0)
+			{
+				flickerTime = FLICKER_TIME;
+				
+				if (alpha == 0)
+				{
+					alpha = 1;
+				}
+				else 
+				{
+					alpha = 0;
+				}
+			}
+		}
+	}
+	
+	public function set_suitDamage(value:Float):Float 
+	{
+		suitDamage = value;
+		if (suitDamage > 100)
+			suitDamage = 100;
+		else if (suitDamage < 0)
+			suitDamage = 0;
+			
+		return suitDamage;
+	}
 	
 }
