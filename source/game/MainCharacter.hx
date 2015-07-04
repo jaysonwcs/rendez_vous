@@ -12,6 +12,7 @@ import flixel.effects.particles.FlxParticle;
 import game.objects.AirTank;
 import game.objects.FuelTank;
 import game.objects.Tank;
+import game.utils.Constants;
 
 /**
  * ...
@@ -221,8 +222,8 @@ class MainCharacter extends FlxSprite
 		//currentlyTile.x = Math.floor(posToCalcTile.x / 20/*Constants.TILE_SIZE*/);
 		//currentlyTile.y = Math.floor(posToCalcTile.y / 20/*Constants.TILE_SIZE*/);
 		
-		currentTileX = Math.floor(posToCalcTile.x / 20/*Constants.TILE_SIZE*/);
-		currentTileY = Math.floor(posToCalcTile.y / 20/*Constants.TILE_SIZE*/);
+		currentTileX = Math.floor(posToCalcTile.x / Constants.TILE_SIZE);
+		currentTileY = Math.floor(posToCalcTile.y / Constants.TILE_SIZE);
 		
 		currentlyTileNum = gameCore.level.getTile(currentTileX, currentTileY);
 		upRightTile = gameCore.level.getTile(currentTileX + 1, currentTileY - 1);

@@ -1,6 +1,7 @@
 package game.inventory;
 
-import flixel.group.FlxGroup;
+import flixel.*;
+import flixel.group.*;
 
 /**
  * ...
@@ -8,33 +9,34 @@ import flixel.group.FlxGroup;
  */
 class Inventory extends FlxGroup
 {
-	//private var background: FlxSprite;
+	private var background: FlxSprite;
 		
 	public function new() 
 	{
 		super();
 		
-		//background = new FlxSprite();
-		//background.makeGraphic(FlxG.width, FlxG.height, 0x7fffffff);
-		//background.scrollFactor.x = 0;
-		//background.scrollFactor.y = 0;
-		//add(background);
+		background = new FlxSprite();
+		background.makeGraphic(FlxG.width, FlxG.height, 0x7fffffff);
+		background.scrollFactor.x = 0;
+		background.scrollFactor.y = 0;
+		add(background);
 	}
 	
-	//override public function update():void {
-		//
-	//}
-	//
-	//override public function add(Object:FlxBasic):FlxBasic {
-		//
-		//if (Object is Tool) {
-			//Tool(Object).x = 50;
-			//Tool(Object).y = 50;
-			//Tool(Object).scrollFactor.x = 0;
-			//Tool(Object).scrollFactor.y = 0;
-		//}
-		//
-		//return super.add(Object);
-	//}
+	override public function update():Void {
+		
+	}
+	
+	override public function add(Object:FlxBasic):FlxBasic {
+		
+		if (Std.is(Object, Tool))
+		{
+			cast(Object, Tool).x = 50;
+			cast(Object, Tool).y = 50;
+			cast(Object, Tool).scrollFactor.x = 0;
+			cast(Object, Tool).scrollFactor.y = 0;
+		}
+		
+		return super.add(Object);
+	}
 	
 }

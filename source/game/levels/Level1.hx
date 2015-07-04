@@ -1,9 +1,11 @@
 package game.levels;
 
-import flixel.FlxSprite;
-import flixel.system.FlxAssets;
-import flixel.tile.FlxTilemap;
-import game.GameCore;
+import flixel.*;
+import flixel.system.*;
+import flixel.tile.*;
+import game.*;
+import game.inventory.*;
+import game.objects.*;
 import lime.Assets;
 
 /**
@@ -18,11 +20,11 @@ class Level1 extends GameCore
 	{
 		super.create();
 		
-		//var tool: Tool = new Tool(200, 200);
-		//inventoryItemsList.add(tool);
-		//
-		//var box: Box = new Box(500, 500);
-		//boxesList.add(box);
+		var tool: Tool = new Tool(200, 200);
+		inventoryItemsList.add(tool);
+		
+		var box: Box = new Box(500, 500);
+		boxesList.add(box);
 	}
 	
 	override function setupLevel():Void 
